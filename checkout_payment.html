@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <title>ชำระเงิน - Blox Fruits Plush</title>
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/static/style.css">
+    <style>
+        .checkout-box {
+            max-width: 580px; margin: 30px auto; background: white; padding: 35px; border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(220, 20, 60, 0.08); border: 1px solid #e2dcd2; text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="navbar">
+        <a href="/shop" class="logo">Blox Fruits Plush</a>
+    </div>
+
+    <div class="container">
+        <div class="checkout-box">
+            <h2 style="color: #dc143c; font-size: 22px; margin-bottom: 6px;"><i class="fa-solid fa-qrcode"></i> สแกน QR Code ชำระเงิน</h2>
+            <p style="color: #64748b; font-size: 14px; margin-bottom: 20px;">บัญชี: {{ promptpay_name }}</p>
+
+            <div style="margin-bottom: 20px;">
+                {{ qr_img_tag }}
+            </div>
+
+            <div style="background: #f2efe7; padding: 15px; border-radius: 12px; margin-bottom: 25px; border: 1px solid #e2dcd2;">
+                <span style="color: #64748b; font-size: 14px;">ยอดชำระเงินสุทธิ:</span>
+                <h3 style="color: #dc143c; font-size: 26px; font-weight: 700;">{{ total_price }}</h3>
+            </div>
+
+            <form id="paymentForm" onsubmit="submitPayment(event)" enctype="multipart/form-data">
+                <div class="form-group" style="text-align: left;">
+                    <label><i class="fa-solid fa-file-arrow-up" style="color: #dc143c;"></i> แนบหลักฐานการโอนเงิน (สลีป):</label>
+                    <input type="file" name="slip_file" accept="image/*" required style="padding: 10px; background: #f2efe7;">
+                </div>
+
+                <button type="submit" id="btnSubmitPay" class="btn-cyan" style="padding: 14px; font-size: 16px;">
+                    <i class="fa-solid fa-circle-check"></i> ยืนยันการชำระเงิน
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal แจ้งเตือนสั่งซื้อสำเร็จ -->
+    <div id="successModal" class="toast-modal-overlay">
+        <div class="toast-modal-box">
+            <div class="success-icon">
+                <i class="fa-solid fa-check"></i>
+            </div>
+            <h3 style="font-size: 22px; color: #80001d; margin-bottom: 8px; font-weight:700;">สั่งซื้อสำเร็จ!</h3>
+            <p style="font-size: 14px; color: #64748b; margin-bottom: 12px;">ระบบได้บันทึกสลีปและสร้างคำสั่งซื้อแล้ว</p>
+            <p style="font-size: 13px; color: #dc143c;"><i class="fa-solid fa-spinner fa-spin"></i> กำลังนำท่านไปยังหน้าใบเสร็จ...</p>
+        </div>
+    </div>
+
+    <script>
+        function submitPayment(e) {
+            e.preventDefault();
+            const btn = document.getElementById('btnSubmitPay');
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> กำลังบันทึกข้อมูล...';
+
+            const form = document.getElementById('paymentForm');
+            const formData = new FormData(form);
+
+            fetch('/checkout/confirm', {
+                method: 'POST',
+                body: formData
+            })
+            .then(res => {
+                if (!res.ok) throw new Error('Server error');
+                return res.json();
+            })
+            .then(data => {
+                if (data.status === 'success' && data.order_id) {
+                    document.getElementById('successModal').classList.add('active');
+                    setTimeout(() => {
+                        window.location.replace('/receipt?order_id=' + data.order_id);
+                    }, 1500);
+                } else if (data.status === 'unauthorized') {
+                    window.location.href = '/login';
+                } else {
+                    alert('เกิดข้อผิดพลาดในการบันทึกข้อมูล กรุณาลองใหม่อีกครั้ง');
+                    btn.disabled = false;
+                    btn.innerHTML = '<i class="fa-solid fa-circle-check"></i> ยืนยันการชำระเงิน';
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                alert('เกิดข้อผิดพลาดในการเชื่อมต่อเครือข่าย');
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fa-solid fa-circle-check"></i> ยืนยันการชำระเงิน';
+            });
+        }
+    </script>
+</body>
+</html>

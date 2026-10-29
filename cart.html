@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <title>ตะกร้าสินค้าของคุณ - Blox Fruits Plush</title>
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+    <div class="navbar">
+        <a href="/shop" class="logo">Blox Fruits Plush</a>
+        <div class="nav-links">
+            <a href="/shop" class="nav-btn nav-btn-outline">&larr; กลับหน้าร้านค้า</a>
+        </div>
+    </div>
+
+    <div class="container" style="max-width: 900px;">
+        <div style="background: white; padding: 30px; border-radius: 20px; border: 1px solid #e2dcd2; box-shadow: 0 4px 20px rgba(0,0,0,0.03);">
+            <h2 style="font-size: 20px; color: #dc143c; margin-bottom: 20px; border-bottom: 2px solid #e2dcd2; padding-bottom: 10px;">
+                <i class="fa-solid fa-cart-shopping"></i> ตะกร้าสินค้าของคุณ
+            </h2>
+
+            <div style="overflow-x: auto; margin-bottom: 25px;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ชื่อสินค้า</th>
+                            <th style="width: 120px;">ราคาต่อหน่วย</th>
+                            <th style="width: 110px;">จำนวน</th>
+                            <th style="width: 120px;">ราคารวม</th>
+                            <th style="width: 70px;">จัดการ</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{ cart_rows }}
+                    </tbody>
+                </table>
+            </div>
+
+            <div style="background: #f2efe7; padding: 20px; border-radius: 14px; border: 1px solid #e2dcd2; text-align: right;">
+                <p style="color: #64748b; font-size: 14px; margin-bottom: 4px;">รวมราคาค่าสินค้า: {{ subtotal_price }}</p>
+                <p style="color: #64748b; font-size: 14px; margin-bottom: 12px;">ภาษีมูลค่าเพิ่ม (VAT 7%): {{ vat_price }}</p>
+                <h3 style="color: #dc143c; font-size: 24px; font-weight: 700;">ยอดชำระสุทธิทั้งสิ้น: {{ total_price }}</h3>
+            </div>
+
+            <div style="margin-top: 25px; text-align: right;">
+                {{ checkout_btn }}
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

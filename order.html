@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <title>ประวัติการสั่งซื้อสินค้า</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="navbar">
+        <div class="logo">🍊 DevilFruit Shop</div>
+        <div class="nav-links">
+            <a href="/shop">กลับหน้าร้านค้า</a>
+            <a href="/logout">ออกจากระบบ</a>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="card">
+            <h2>📜 ประวัติการสั่งซื้อสินค้าของคุณ, {{ username }}</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>หมายเลขคำสั่งซื้อ</th>
+                        <th>ยอดรวมสุทธิ</th>
+                        <th>สถานะการจัดส่ง</th>
+                        <th>วันที่สั่งซื้อ</th>
+                        <th>รายละเอียด</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{ order_rows }}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

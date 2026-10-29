@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <title>โปรไฟล์ผู้ใช้งาน - Blox Fruits Plush</title>
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+    <div class="navbar">
+        <a href="/shop" class="logo">Blox Fruits Plush</a>
+        <div class="nav-links">
+            {{ admin_btn }}
+            <a href="/shop" class="nav-btn nav-btn-outline"><i class="fa-solid fa-store" style="margin-right:6px;"></i> หน้าร้านค้า</a>
+            <a href="/logout" class="nav-btn nav-btn-outline">ออกจากระบบ</a>
+        </div>
+    </div>
+
+    <div class="container" style="max-width: 900px;">
+        <div style="background: white; padding: 30px; border-radius: 20px; border: 1px solid #e2e8f0; box-shadow: 0 4px 20px rgba(0,0,0,0.03); margin-bottom: 30px;">
+            
+            <div style="display:flex; justify-content:space-between; align-items:center; border-bottom: 2px solid #f1f5f9; padding-bottom: 10px; margin-bottom: 20px;">
+                <h2 style="font-size: 20px; color: #3A2036;">
+                    <i class="fa-solid fa-user-gear"></i> ข้อมูลโปรไฟล์ผู้ใช้งาน
+                </h2>
+            </div>
+
+            <form id="profileForm" onsubmit="saveProfile(event)" enctype="multipart/form-data">
+                <div style="display: flex; align-items: center; gap: 20px; margin-bottom: 20px;">
+                    <img src="{{ profile_img }}" id="avatarPreview" style="width: 80px; height: 80px; border-radius: 20px; object-fit: cover; border: 2px solid #3A2036;" onerror="this.src='/static/images/default_avatar.png';">
+                    <div>
+                        <label style="font-size: 13px; font-weight: 600; color: #64748b;">เปลี่ยนรูปโปรไฟล์:</label>
+                        <input type="file" name="profile_img" accept="image/*" style="display: block; margin-top: 6px; font-size: 13px;">
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 15px;">
+                    <div class="form-group">
+                        <label>ชื่อผู้ใช้งาน (Username):</label>
+                        <input type="text" name="username" value="{{ username }}" required>
+                    </div>
+                    <div class="form-group">
+                        <label>อีเมล (Gmail):</label>
+                        <input type="email" name="email" value="{{ email }}" required>
+                    </div>
+                    <div class="form-group">
+                        <label>เบอร์โทรศัพท์:</label>
+                        <input type="text" name="phone" value="{{ phone }}" placeholder="08XXXXXXXX">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>ที่อยู่สำหรับจัดส่งสินค้า:</label>
+                    <textarea name="address" rows="3" style="width: 100%; padding: 12px; border-radius: 10px; border: 1px solid #cbd5e1; outline: none; font-family:'Prompt';">{{ address }}</textarea>
+                </div>
+
+                <button type="submit" class="btn-cyan" style="width: auto; padding: 10px 24px;">บันทึกการเปลี่ยนแปลง</button>
+                <span id="profileSuccessMsg" style="color: #16a34a; font-weight: 600; margin-left: 12px; display: none;"><i class="fa-solid fa-circle-check"></i> บันทึกข้อมูลเรียบร้อยแล้ว</span>
+            </form>
+        </div>
+
+        <div style="background: white; padding: 30px; border-radius: 20px; border: 1px solid #e2e8f0; box-shadow: 0 4px 20px rgba(0,0,0,0.03);">
+            <h2 style="font-size: 20px; color: #3A2036; margin-bottom: 20px; border-bottom: 2px solid #f1f5f9; padding-bottom: 10px;">
+                <i class="fa-solid fa-clock-rotate-left"></i> ประวัติการสั่งซื้อของคุณ
+            </h2>
+
+            <div style="overflow-x: auto;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>เลขที่ออเดอร์</th>
+                            <th>วันที่สั่งซื้อ</th>
+                            <th>ยอดเงินสุทธิ</th>
+                            <th>สถานะสินค้า</th>
+                            <th>ใบเสร็จ</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{ order_history_rows }}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function saveProfile(e) {
+            e.preventDefault();
+            const scrollPos = window.scrollY;
+            const form = document.getElementById('profileForm');
+            const formData = new FormData(form);
+
+            fetch('/update-profile', {
+                method: 'POST',
+                body: formData
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    const msg = document.getElementById('profileSuccessMsg');
+                    msg.style.display = 'inline';
+                    setTimeout(() => msg.style.display = 'none', 2500);
+                    window.scrollTo(0, scrollPos);
+                } else {
+                    alert(data.message || 'เกิดข้อผิดพลาดในการบันทึกข้อมูล');
+                }
+            });
+        }
+    </script>
+</body>
+</html>

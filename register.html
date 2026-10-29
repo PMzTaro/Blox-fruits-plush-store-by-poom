@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <title>สมัครสมาชิก - Blox Fruits Plush</title>
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/static/style.css">
+    <style>
+        .auth-box {
+            max-width: 480px;
+            margin: 40px auto;
+            background: #ffffff;
+            padding: 35px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(220, 20, 60, 0.08);
+            border: 1px solid #e2dcd2;
+        }
+        .auth-title {
+            text-align: center;
+            font-size: 24px;
+            color: #80001d;
+            font-weight: 700;
+            margin-bottom: 25px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="navbar">
+        <a href="/shop" class="logo">Blox Fruits Plush</a>
+        <div class="nav-links">
+            <a href="/shop" class="nav-btn nav-btn-outline"><i class="fa-solid fa-store" style="margin-right:6px;"></i> หน้าร้านค้า</a>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="auth-box">
+            <h2 class="auth-title"><i class="fa-solid fa-user-plus"></i> สมัครสมาชิกใหม่</h2>
+            {{ error_block }}
+            <form method="POST" action="/register">
+                <div class="form-group">
+                    <label>อีเมล (Gmail เท่านั้น):</label>
+                    <input type="email" name="email" placeholder="example@gmail.com" required>
+                </div>
+                <div class="form-group">
+                    <label>ชื่อผู้ใช้งาน (Username):</label>
+                    <input type="text" name="username" placeholder="ตั้งชื่อผู้ใช้งาน" required>
+                </div>
+                <div class="form-group">
+                    <label>รหัสผ่าน (Password):</label>
+                    <input type="password" name="password" placeholder="6-20 ตัวอักษร, มีตัวพิมพ์ใหญ่ พิมพ์เล็ก เลข" required>
+                </div>
+                <div class="form-group">
+                    <label>ยืนยันรหัสผ่าน (Confirm Password):</label>
+                    <input type="password" name="confirm_password" placeholder="กรอกรหัสผ่านอีกครั้ง" required>
+                </div>
+                <button type="submit" class="btn-cyan" style="margin-top:10px;">สมัครสมาชิก</button>
+            </form>
+
+            <div style="text-align: center; margin-top: 25px; border-top: 1px solid #e2dcd2; padding-top: 18px; font-size: 14px; color: #64748b;">
+                มีบัญชีผู้ใช้อยู่แล้ว? <a href="/login" style="color: #dc143c; font-weight: 700; text-decoration: none;">เข้าสู่ระบบที่นี่</a>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

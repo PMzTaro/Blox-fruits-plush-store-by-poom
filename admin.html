@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <title>ระบบหลังบ้าน - Blox Fruits Plush</title>
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/static/style.css">
+    <style>
+        .admin-section { margin-bottom: 40px; }
+        .admin-card { background: white; padding: 25px; border-radius: 16px; border: 1px solid #e2dcd2; box-shadow: 0 4px 15px rgba(0,0,0,0.02); }
+    </style>
+</head>
+<body>
+
+    <div class="navbar">
+        <a href="/shop" class="logo">Blox Fruits Plush (Admin)</a>
+        <div class="nav-links">
+            <a href="/shop" class="nav-btn nav-btn-outline"><i class="fa-solid fa-store" style="margin-right:6px;"></i> หน้าร้านค้า</a>
+            <a href="/logout" class="nav-btn nav-btn-outline"><i class="fa-solid fa-right-from-bracket" style="margin-right:6px;"></i> ออกจากระบบ</a>
+        </div>
+    </div>
+
+    <!-- Toast แจ้งเตือนบันทึกแล้ว -->
+    <div id="saveToast" class="toast-save-notif">
+        <i class="fa-solid fa-circle-check" style="font-size:18px;"></i> บันทึกข้อมูลเรียบร้อยแล้ว
+    </div>
+
+    <div class="container" style="max-width: 1250px;">
+
+        <!-- สรุปยอดขาย 3 ระดับ -->
+        <div class="admin-section">
+            <h2 class="section-title"><i class="fa-solid fa-chart-line"></i> สรุปภาพรวมยอดขายร้านค้า</h2>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 18px;">
+                <div class="admin-card" style="border-left: 5px solid #10b981;">
+                    <p style="font-size: 13px; color: #64748b;">ยอดขายวันนี้</p>
+                    <h3 style="font-size: 24px; color: #10b981; margin-top: 4px;">{{ daily_sales }}</h3>
+                </div>
+                <div class="admin-card" style="border-left: 5px solid #0d9488;">
+                    <p style="font-size: 13px; color: #64748b;">ยอดขายเดือนนี้</p>
+                    <h3 style="font-size: 24px; color: #0d9488; margin-top: 4px;">{{ monthly_sales }}</h3>
+                </div>
+                <div class="admin-card" style="border-left: 5px solid #2563eb;">
+                    <p style="font-size: 13px; color: #64748b;">ยอดขายปีนี้</p>
+                    <h3 style="font-size: 24px; color: #2563eb; margin-top: 4px;">{{ yearly_sales }}</h3>
+                </div>
+                <div class="admin-card" style="border-left: 5px solid #d97706;">
+                    <p style="font-size: 13px; color: #64748b;">สินค้าขายดีอันดับ 1</p>
+                    <h3 style="font-size: 16px; color: #d97706; margin-top: 4px;">{{ top_product_name }}</h3>
+                    <p style="font-size: 12px; color: #94a3b8;">จำหน่ายแล้ว {{ top_product_qty }} ชิ้น</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- รายการสั่งซื้อเฉพาะของวันนี้ -->
+        <div class="admin-section">
+            <h2 class="section-title"><i class="fa-solid fa-clock"></i> รายการสั่งซื้อเฉพาะของวันนี้</h2>
+            <div class="admin-card" style="overflow-x: auto;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th style="width: 70px;">ออเดอร์</th>
+                            <th>ลูกค้า</th>
+                            <th>รายการสินค้าที่สั่ง</th>
+                            <th style="width: 100px;">ยอดเงิน</th>
+                            <th style="width: 180px;">ที่อยู่ & เบอร์โทร</th>
+                            <th style="width: 70px;">สลีป</th>
+                            <th style="width: 170px;">สถานะ & เหตุผล</th>
+                            <th style="width: 140px;">เวลาสั่ง</th>
+                            <th style="width: 80px;">จัดการ</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{ today_order_rows }}
+                    </tbody>
+                </table>
+                {{ today_pagination_html }}
+            </div>
+        </div>
+
+        <!-- รายการสั่งซื้อทั้งหมด -->
+        <div class="admin-section">
+            <h2 class="section-title"><i class="fa-solid fa-receipt"></i> การจัดการคำสั่งซื้อทั้งหมด (Orders)</h2>
+            <div class="admin-card" style="overflow-x: auto;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th style="width: 70px;">ออเดอร์</th>
+                            <th>ลูกค้า</th>
+                            <th>รายการสินค้าที่สั่ง</th>
+                            <th style="width: 100px;">ยอดเงิน</th>
+                            <th style="width: 180px;">ที่อยู่ & เบอร์โทร</th>
+                            <th style="width: 70px;">สลีป</th>
+                            <th style="width: 170px;">สถานะ & เหตุผล</th>
+                            <th style="width: 140px;">วันที่สั่ง</th>
+                            <th style="width: 80px;">จัดการ</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{ order_rows }}
+                    </tbody>
+                </table>
+                {{ orders_pagination_html }}
+            </div>
+        </div>
+
+        <!-- การจัดการแบนเนอร์สไลเดอร์ -->
+        <div class="admin-section">
+            <h2 class="section-title"><i class="fa-solid fa-images"></i> การจัดการสไลเดอร์แบนเนอร์</h2>
+            <div class="admin-card" style="overflow-x: auto; margin-bottom: 20px;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th style="width: 60px;">ID</th>
+                            <th style="width: 100px;">รูปภาพ</th>
+                            <th>หัวข้อแบนเนอร์ (Title)</th>
+                            <th>รายละเอียด (Subtitle)</th>
+                            <th>URL / เส้นทางรูปภาพ</th>
+                            <th style="width: 120px;">จัดการ</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{ banner_rows }}
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="admin-card">
+                <h3 style="font-size: 15px; margin-bottom: 12px; color:#80001d;"><i class="fa-solid fa-cloud-arrow-up"></i> อัปโหลดสไลด์แบนเนอร์ใหม่</h3>
+                <form method="POST" action="/admin/add-banner" enctype="multipart/form-data" onsubmit="saveScroll()" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px;">
+                    <div>
+                        <label style="font-size: 12px; font-weight:600; color:#475569;">หัวข้อแบนเนอร์:</label>
+                        <input type="text" name="title" placeholder="เช่น โปรโมชันพิเศษต้อนรับซีซันใหม่" required style="width:100%; padding: 8px; border: 1px solid #cbd5e0; border-radius: 6px; margin-top:4px;">
+                    </div>
+                    <div>
+                        <label style="font-size: 12px; font-weight:600; color:#475569;">รายละเอียด:</label>
+                        <input type="text" name="subtitle" placeholder="เช่น ช้อปครบตามกำหนด รับส่วนลดทันที" style="width:100%; padding: 8px; border: 1px solid #cbd5e0; border-radius: 6px; margin-top:4px;">
+                    </div>
+                    <div>
+                        <label style="font-size: 12px; font-weight:600; color:#475569;">เลือกไฟล์รูปภาพแบนเนอร์:</label>
+                        <input type="file" name="banner_file" accept="image/*" required style="width:100%; padding: 6px; border: 1px solid #cbd5e0; border-radius: 6px; margin-top:4px; font-size:12px; background:#f8fafc;">
+                    </div>
+                    <button type="submit" class="btn-cyan-sm" style="grid-column: 1 / -1; padding: 10px; margin-top:6px;">
+                        <i class="fa-solid fa-upload"></i> อัปโหลดรูปแบนเนอร์เข้าสู่ระบบ
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- การจัดการสินค้า -->
+        <div class="admin-section">
+            <h2 class="section-title"><i class="fa-solid fa-box"></i> การจัดการรายการสินค้า</h2>
+            <div class="admin-card" style="overflow-x: auto; margin-bottom: 20px;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th style="width: 50px;">ID</th>
+                            <th style="width: 60px;">รูป</th>
+                            <th>ชื่อสินค้า</th>
+                            <th style="width: 120px;">หมวดหมู่</th>
+                            <th>คำอธิบาย</th>
+                            <th style="width: 100px;">ราคา</th>
+                            <th style="width: 80px;">สต็อก</th>
+                            <th>URL รูป</th>
+                            <th style="width: 110px;">จัดการ</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{ product_rows }}
+                    </tbody>
+                </table>
+                {{ pagination_html }}
+            </div>
+
+            <div class="admin-card">
+                <h3 style="font-size: 15px; margin-bottom: 12px; color:#80001d;">+ เพิ่มสินค้าชิ้นใหม่</h3>
+                <form method="POST" action="/admin/add-product" onsubmit="saveScroll()" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px;">
+                    <input type="text" name="name" placeholder="ชื่อสินค้า" required style="padding: 8px; border: 1px solid #cbd5e0; border-radius: 6px;">
+                    <select name="category" style="padding: 8px; border: 1px solid #cbd5e0; border-radius: 6px;">
+                        <option value="Paramecia">Paramecia</option>
+                        <option value="Zoan">Zoan</option>
+                        <option value="Logia">Logia</option>
+                    </select>
+                    <input type="text" name="description" placeholder="คำอธิบายสินค้า" required style="padding: 8px; border: 1px solid #cbd5e0; border-radius: 6px;">
+                    <input type="number" step="0.01" name="price" placeholder="ราคา (บาท)" required style="padding: 8px; border: 1px solid #cbd5e0; border-radius: 6px;">
+                    <input type="number" name="stock" placeholder="จำนวนสต็อก" required style="padding: 8px; border: 1px solid #cbd5e0; border-radius: 6px;">
+                    <input type="text" name="image_url" placeholder="URL รูปภาพสินค้า" required style="padding: 8px; border: 1px solid #cbd5e0; border-radius: 6px;">
+                    <button type="submit" class="btn-cyan-sm" style="grid-column: 1 / -1; padding: 10px;">เพิ่มสินค้าเข้าสู่ระบบ</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- ตั้งค่า QR Code & ติดต่อเรา -->
+        <div class="admin-section" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px;">
+            <div class="admin-card">
+                <h3 style="font-size: 16px; margin-bottom: 15px; color:#80001d;"><i class="fa-solid fa-qrcode"></i> ตั้งค่าระบบชำระเงิน</h3>
+                <form method="POST" action="/admin/update-qr-file" enctype="multipart/form-data" onsubmit="saveScroll()">
+                    <div class="form-group">
+                        <label>ชื่อบัญชี / พร้อมเพย์:</label>
+                        <input type="text" name="promptpay_name" value="{{ promptpay_name }}" required>
+                    </div>
+                    <div class="form-group">
+                        <label>รูปภาพ QR Code ชำระเงิน:</label>
+                        <input type="file" name="qr_file" accept="image/*">
+                    </div>
+                    <button type="submit" class="btn-cyan-sm" style="width: 100%; padding: 10px;">อัปเดตระบบชำระเงิน</button>
+                </form>
+            </div>
+
+            <div class="admin-card">
+                <h3 style="font-size: 16px; margin-bottom: 15px; color:#80001d;"><i class="fa-solid fa-headset"></i> ตั้งค่าลิงก์ติดต่อเรา</h3>
+                <form method="POST" action="/admin/update-contact" onsubmit="saveScroll()">
+                    <div class="form-group">
+                        <label>URL ติดต่อเรา (Line / Facebook / อื่นๆ):</label>
+                        <input type="text" name="contact_info" value="{{ contact_info }}" required>
+                    </div>
+                    <button type="submit" class="btn-cyan-sm" style="width: 100%; padding: 10px; margin-top: 40px;">บันทึกลิงก์ติดต่อ</button>
+                </form>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        function showSaveNotif() {
+            const toast = document.getElementById('saveToast');
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 2500);
+        }
+
+        function saveScroll() {
+            sessionStorage.setItem('admin_scroll', window.scrollY);
+            sessionStorage.setItem('just_saved', 'true');
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            const savedScroll = sessionStorage.getItem('admin_scroll');
+            if (savedScroll !== null) {
+                window.scrollTo(0, parseInt(savedScroll));
+                sessionStorage.removeItem('admin_scroll');
+            }
+            if (sessionStorage.getItem('just_saved') === 'true') {
+                showSaveNotif();
+                sessionStorage.removeItem('just_saved');
+            }
+        });
+
+        function toggleCancelReason(orderId) {
+            const statusSelect = document.getElementById(`order-status-${orderId}`);
+            const reasonBox = document.getElementById(`cancel-reason-box-${orderId}`);
+            if (statusSelect.value === 'ยกเลิก') {
+                reasonBox.style.display = 'block';
+            } else {
+                reasonBox.style.display = 'none';
+            }
+        }
+
+        function updateBanner(bannerId) {
+            const title = document.getElementById(`banner-title-${bannerId}`).value;
+            const subtitle = document.getElementById(`banner-sub-${bannerId}`).value;
+            const imageUrl = document.getElementById(`banner-img-${bannerId}`).value;
+
+            const params = new URLSearchParams();
+            params.append('banner_id', bannerId);
+            params.append('title', title);
+            params.append('subtitle', subtitle);
+            params.append('image_url', imageUrl);
+
+            fetch('/admin/update-banner-inline', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: params.toString()
+            })
+            .then(res => res.json())
+            .then(data => {
+                if(data.status === 'success') {
+                    showSaveNotif();
+                }
+            });
+        }
+
+        function updateOrder(orderId) {
+            const addr = document.getElementById(`order-addr-${orderId}`).value;
+            const phone = document.getElementById(`order-phone-${orderId}`).value;
+            const status = document.getElementById(`order-status-${orderId}`).value;
+            const cancelReason = document.getElementById(`order-cancel-reason-${orderId}`) ? document.getElementById(`order-cancel-reason-${orderId}`).value : '';
+
+            const params = new URLSearchParams();
+            params.append('order_id', orderId);
+            params.append('shipping_address', addr);
+            params.append('phone', phone);
+            params.append('status', status);
+            params.append('cancel_reason', cancelReason);
+
+            fetch('/admin/update-order-inline', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: params.toString()
+            })
+            .then(res => res.json())
+            .then(data => {
+                if(data.status === 'success') {
+                    showSaveNotif();
+                }
+            });
+        }
+
+        function updateProduct(productId) {
+            const name = document.getElementById(`name-${productId}`).value;
+            const category = document.getElementById(`category-${productId}`).value;
+            const desc = document.getElementById(`desc-${productId}`).value;
+            const price = document.getElementById(`price-${productId}`).value;
+            const stock = document.getElementById(`stock-${productId}`).value;
+            const image = document.getElementById(`image-${productId}`).value;
+
+            const params = new URLSearchParams();
+            params.append('product_id', productId);
+            params.append('name', name);
+            params.append('category', category);
+            params.append('description', desc);
+            params.append('price', price);
+            params.append('stock', stock);
+            params.append('image_url', image);
+
+            fetch('/admin/update-product-inline', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: params.toString()
+            })
+            .then(res => res.json())
+            .then(data => {
+                if(data.status === 'success') {
+                    showSaveNotif();
+                }
+            });
+        }
+    </script>
+</body>
+</html>

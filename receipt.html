@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <title>ใบเสร็จรับเงิน - Blox Fruits Plush</title>
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { box-sizing: border-box; font-family: 'Prompt', sans-serif; margin: 0; padding: 0; }
+        body { background-color: #f8fafc; color: #1e293b; padding: 40px 20px; }
+        .receipt-card {
+            max-width: 750px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.06);
+            border-top: 6px solid #3A2036;
+            border: 1px solid #e2e8f0;
+        }
+        .header-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            border-bottom: 2px solid #f1f5f9;
+            padding-bottom: 20px;
+            margin-bottom: 25px;
+        }
+        .store-title { font-size: 24px; font-weight: 700; color: #3A2036; }
+        .store-sub { font-size: 13px; color: #64748b; }
+        .receipt-num { font-size: 20px; font-weight: 700; color: #2563eb; text-align: right; }
+        
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 15px;
+            margin-bottom: 25px;
+            background: #f8fafc;
+            padding: 20px;
+            border-radius: 14px;
+            border: 1px solid #e2e8f0;
+        }
+        .info-item label { font-size: 13px; color: #64748b; font-weight: 500; }
+        .info-item p { font-size: 14px; font-weight: 600; color: #0f172a; margin-top: 2px; }
+
+        table { width: 100%; border-collapse: collapse; margin-bottom: 25px; }
+        table th, table td { border: 1px solid #f1f5f9; padding: 14px; font-size: 14px; }
+        table th { background: #3A2036; color: #DCE8DB; font-weight: 600; }
+
+        .summary-box {
+            text-align: right;
+            font-size: 14px;
+            color: #475569;
+            line-height: 2;
+            margin-bottom: 30px;
+        }
+        .grand-total {
+            font-size: 24px;
+            font-weight: 700;
+            color: #2563eb;
+            border-top: 1px dashed #cbd5e1;
+            padding-top: 8px;
+            margin-top: 6px;
+        }
+
+        .action-btns {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .btn-outline {
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 10px;
+            border: 1px solid #cbd5e1;
+            color: #475569;
+            font-weight: 600;
+            font-size: 14px;
+        }
+        .btn-print {
+            background: #3A2036;
+            color: #DCE8DB;
+            border: none;
+            padding: 11px 24px;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="receipt-card">
+        <div class="header-row">
+            <div>
+                <div class="store-title">Blox Fruits Plush</div>
+                <div class="store-sub">ร้านจำหน่ายตุ๊กตาลิขสิทธิ์แท้ออนไลน์</div>
+            </div>
+            <div>
+                <div class="receipt-num">ใบเสร็จรับเงิน / ใบกำกับสินค้า</div>
+                <div style="text-align: right; font-size: 13px; color: #64748b;">เลขออเดอร์: #{{ order_id }}</div>
+            </div>
+        </div>
+
+        <div class="info-grid">
+            <div class="info-item">
+                <label>ชื่อผู้สั่งซื้อ:</label>
+                <p>{{ username }}</p>
+            </div>
+            <div class="info-item">
+                <label>วันที่ทำรายการ:</label>
+                <p>{{ date }}</p>
+            </div>
+            <div class="info-item" style="grid-column: 1 / -1;">
+                <label>ที่อยู่จัดส่งสินค้า:</label>
+                <p>{{ shipping_address }}</p>
+            </div>
+            <div class="info-item">
+                <label>สถานะออเดอร์:</label>
+                <p><span style="background: #eff6ff; color: #2563eb; padding: 4px 12px; border-radius: 12px; font-size: 13px;">{{ status }}</span></p>
+                {{ cancel_reason_block }}
+            </div>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>รายการสินค้า</th>
+                    <th style="width: 100px; text-align: center;">จำนวน</th>
+                    <th style="width: 140px; text-align: right;">ราคารวม</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{ items_rows }}
+            </tbody>
+        </table>
+
+        <div class="summary-box">
+            รวมราคาค่าสินค้า: {{ subtotal_price }}<br>
+            ภาษีมูลค่าเพิ่ม (VAT 7%): {{ vat_price }}<br>
+            <div class="grand-total">
+                ยอดชำระสุทธิทั้งสิ้น: {{ total_price }}
+            </div>
+        </div>
+
+        <p style="text-align: center; color: #94a3b8; font-size: 13px; margin-bottom: 25px;">
+            ขอบคุณที่อุดหนุนสินค้าของเรา หากมีข้อสงสัยกรุณาติดต่อแอดมิน
+        </p>
+
+        <div class="action-btns">
+            <a href="/shop" class="btn-outline">&larr; กลับสู่หน้าร้านค้า</a>
+            <button class="btn-print" onclick="window.print()"><i class="fa-solid fa-print"></i> บันทึกเป็น PDF / พิมพ์ใบเสร็จ</button>
+        </div>
+    </div>
+
+</body>
+</html>
